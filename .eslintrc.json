@@ -1,6 +1,6 @@
 {
     "env": {
-        "browser": true
+        "node": true
     },
     "extends": [
         "eslint:recommended"
@@ -26,7 +26,6 @@
         "semi": [
             "error",
             "always"
-        ],
-        "no-undef": "off"
+        ]
     }
 }
