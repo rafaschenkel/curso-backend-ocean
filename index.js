@@ -1,49 +1,74 @@
-const express = require('express');
-const app = express();
+const express = require('express'); // import do express
+const { MongoClient, ObjectId } = require('mongodb'); // import MongoClient & ObjectId do mongodb
 
-// Habilitamos o processamento do JSON
-app.use(express.json());
+const url = 'mongodb://127.0.0.1:27017'; // url do banco de dados
+const dbName = 'jornadaBackendOcean'; // nome do banco de dados
+const client = new MongoClient(url); // instancia o client
 
-const herois = ['Homem de Ferro', 'Doutor Estranho', 'Homem Aranha', 'Batman'];
+const main = async () => {
+    console.log('Conectando ao banco...');
+    await client.connect(); // tenta fazer a conexao com o banco
+    console.log('Banco de dados conectado!');
+    const db = client.db(dbName); // informa pro client qual o banco de dados
+    const collection = db.collection('herois'); // informa pro client qual a collection
 
-// Endpoint principal
-app.get('/', function (req, res) {
-    res.send('Hello World');
-});
+    const app = express(); // instancia o express
 
-// Read All -> [GET] /herois
-app.get('/herois', function (req, res) {
-    res.send(herois.filter(Boolean));
-});
+    app.use(express.json()); // Habilitamos o processamento do JSON
 
-// Read By ID -> [GET] /herois/:id
-app.get('/herois/:id', (req, res) => {
-    const id = req.params.id - 1;
-    res.send(herois[id] ? herois[id] : 'Registro não localizado');
-});
+    // Endpoint principal
+    app.get('/', (req, res) => {
+        res.send('Heróis');
+    });
 
-// Create -> [POST] /herois
-app.post('/herois', function (req, res) {
-    herois.push(req.body.name);
-    res.send('Registro criado com sucesso!');
-});
+    // Read All -> [GET] /herois
+    app.get('/herois', async (req, res) => {
+        const itens = await collection.find().toArray(); // busca todos os registros existentes na collection e transforma a informação em um array
+        res.send(itens);
+    });
 
-// Update -> [PUT] /herois/:id
-app.put('/herois/:id', (req, res) => {
-    const id = req.params.id - 1;
-    const novosDados = req.body.name;
-    herois[id] = novosDados;
-    res.send('Registro atualizado com sucesso!');
-});
+    // Read By ID -> [GET] /herois/:id
+    app.get('/herois/:id', async (req, res) => {
+        const id = req.params.id;
+        const item = await collection.findOne({
+            _id: new ObjectId(id)
+        }); // busca por um unico registro na collection filtrando pelo id
+        res.send(item);
+    });
 
-// Delete -> [DELETE] /herois/:id
-app.delete('/herois/:id', (req, res) => {
-    const id = req.params.id - 1;
-    delete herois[id];
+    // Create -> [POST] /herois
+    app.post('/herois', async (req, res) => {
+        const item = req.body;
+        await collection.insertOne(item); // inseri um novo registro na collection
+        res.send(item);
+    });
 
-    res.send('Registro removido com sucesso!');
-});
+    // Update -> [PUT] /herois/:id
+    app.put('/herois/:id', async (req, res) => {
+        const id = req.params.id;
+        const item = req.body;
+        await collection.updateOne(
+            {
+                _id: new ObjectId(id)
+            },
+            {
+                $set: item
+            }
+        ); // atualiza o registro ( $set: novos dados ) com base no filtro ( Id ) informado
+        res.send(item);
+    });
 
-app.listen(3000, () => {
-    console.log('Servidor rodando http://localhost:3000');
-});
+    // Delete -> [DELETE] /herois/:id
+    app.delete('/herois/:id', async (req, res) => {
+        const id = req.params.id;
+        await collection.deleteOne({ _id: new ObjectId(id) }); // deleta um registro com base no filtro ( Id ) informado
+
+        res.send('Registro removido com sucesso!');
+    });
+
+    app.listen(3000, () => {
+        console.log('Servidor rodando http://localhost:3000');
+    });
+};
+
+main();
