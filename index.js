@@ -1,10 +1,15 @@
 const express = require('express'); // import do express
 const { MongoClient, ObjectId } = require('mongodb'); // import MongoClient & ObjectId do mongodb
 const cors = require('cors');
+require('dotenv').config();
+
+const dbName = process.env.DB_NAME; // nome do banco de dados
+const dbUser = process.env.DB_USER; // nome do banco de dados
+const dbPassword = process.env.DB_PASSWORD; // nome do banco de dados
+const dbHost = process.env.DB_HOST; // nome do banco de dados
 
 //const url = 'mongodb://127.0.0.1:27017'; // url do banco de dados
-const url = 'mongodb+srv://admin:qubgBw18U9a2wNph@cluster0.zoculbg.mongodb.net'; // url do banco de dados
-const dbName = 'jornadaBackendOcean'; // nome do banco de dados
+const url = `mongodb+srv://${dbUser}:${dbPassword}${dbHost}`; // url do banco de dados
 const client = new MongoClient(url); // instancia o client
 
 const main = async () => {
