@@ -9,7 +9,7 @@ const dbPassword = process.env.DB_PASSWORD; // nome do banco de dados
 const dbHost = process.env.DB_HOST; // nome do banco de dados
 
 //const url = 'mongodb://127.0.0.1:27017'; // url do banco de dados
-const url = `mongodb+srv://${dbUser}:${dbPassword}${dbHost}`; // url do banco de dados
+const url = `mongodb+srv://${dbUser}:${dbPassword}@${dbHost}`; // url do banco de dados
 const client = new MongoClient(url); // instancia o client
 
 const main = async () => {
