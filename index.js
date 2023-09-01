@@ -1,5 +1,6 @@
 const express = require('express'); // import do express
 const { MongoClient, ObjectId } = require('mongodb'); // import MongoClient & ObjectId do mongodb
+const cors = require('cors');
 
 //const url = 'mongodb://127.0.0.1:27017'; // url do banco de dados
 const url = 'mongodb+srv://admin:qubgBw18U9a2wNph@cluster0.zoculbg.mongodb.net'; // url do banco de dados
@@ -15,6 +16,7 @@ const main = async () => {
 
     const app = express(); // instancia o express
 
+    app.use(cors());
     app.use(express.json()); // Habilitamos o processamento do JSON
 
     // Endpoint principal
