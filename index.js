@@ -1,7 +1,8 @@
 const express = require('express'); // import do express
 const { MongoClient, ObjectId } = require('mongodb'); // import MongoClient & ObjectId do mongodb
 
-const url = 'mongodb://127.0.0.1:27017'; // url do banco de dados
+//const url = 'mongodb://127.0.0.1:27017'; // url do banco de dados
+const url = 'mongodb+srv://admin:qubgBw18U9a2wNph@cluster0.zoculbg.mongodb.net'; // url do banco de dados
 const dbName = 'jornadaBackendOcean'; // nome do banco de dados
 const client = new MongoClient(url); // instancia o client
 
