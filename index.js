@@ -67,9 +67,7 @@ const main = async () => {
         res.send('Registro removido com sucesso!');
     });
 
-    app.listen(3000, () => {
-        console.log('Servidor rodando http://localhost:3000');
-    });
+    app.listen(process.env.PORT || 3000);
 };
 
 main();
